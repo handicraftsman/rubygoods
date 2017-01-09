@@ -3,6 +3,19 @@ require "rainbow"
 
 module RG
   module Log
+    def self._queue
+      @queue = Queue.new
+      Thread.new do
+        loop do
+          puts @queue.pop
+        end
+      end
+    end
+
+    def self._write(msg)
+      @queue << msg
+    end
+
     def self.write(input, ln=true, color=true)
       msg = input.to_s
 
@@ -148,3 +161,5 @@ module RG
     end
   end
 end
+
+RG::Log._queue

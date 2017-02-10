@@ -1,6 +1,8 @@
 require "date"
 require "rainbow"
 
+$RG_LOG_LEVEL = :info
+
 module RG
   module Log
     def self._queue
@@ -8,6 +10,7 @@ module RG
       Thread.new do
         loop do
           puts @queue.pop
+          sleep 0.01
         end
       end
     end
@@ -16,18 +19,33 @@ module RG
       @queue << msg
     end
 
-    def self.write(input, ln=true, color=true)
+    def self.write(input, ln=true, color=true, code=1)
+      case $RG_LOG_LEVEL
+      when :info
+        self.info  input, ln, color
+      when :warn
+        self.warn  input, ln, color
+      when :err
+        self.err   input, ln, color
+      when :crash
+        self.crash input, code, ln, color 
+      else
+        self.err "Wrong logger-level!"
+      end
+    end
+
+    def self.info(input, ln=true, color=true)
       msg = input.to_s
 
       datencstr = "%d.%m.%Y|%H:%M:%S"
       datestr = if color
-        Rainbow("%d").green.underline + Rainbow(".").cyan.underline +
-        Rainbow("%m").green.underline + Rainbow(".").cyan.underline +
-        Rainbow("%Y").green.underline + 
-        Rainbow("|").cyan.underline +
-        Rainbow("%H").green.underline + Rainbow(":").cyan.underline +
-        Rainbow("%M").green.underline + Rainbow(":").cyan.underline +
-        Rainbow("%S").green.underline
+        Rainbow("%d").green + Rainbow(".").cyan +
+        Rainbow("%m").green + Rainbow(".").cyan +
+        Rainbow("%Y").green + 
+        Rainbow("|").cyan +
+        Rainbow("%H").green + Rainbow(":").cyan +
+        Rainbow("%M").green + Rainbow(":").cyan +
+        Rainbow("%S").green
       else
         datencstr
       end
@@ -36,9 +54,9 @@ module RG
       dateout = date.strftime datestr
       datencout = date.strftime datencstr
       out = if color
-        Rainbow("[").cyan.underline + 
+        Rainbow("[").cyan + 
         dateout + 
-        Rainbow("]").cyan.underline + Rainbow("-> ").green.underline + 
+        Rainbow("]").cyan + Rainbow("-> ").green + 
         msg
       else
         "[" + datencout + "]-> " + msg
@@ -57,13 +75,13 @@ module RG
 
       datencstr = "%d.%m.%Y|%H:%M:%S"
       datestr = if color
-        Rainbow("%d").orange.underline + Rainbow(".").red.underline +
-        Rainbow("%m").orange.underline + Rainbow(".").red.underline +
-        Rainbow("%Y").orange.underline + 
-        Rainbow("|").red.underline +
-        Rainbow("%H").orange.underline + Rainbow(":").red.underline +
-        Rainbow("%M").orange.underline + Rainbow(":").red.underline +
-        Rainbow("%S").orange.underline
+        Rainbow("%d").orange + Rainbow(".").red +
+        Rainbow("%m").orange + Rainbow(".").red +
+        Rainbow("%Y").orange + 
+        Rainbow("|").red +
+        Rainbow("%H").orange + Rainbow(":").red +
+        Rainbow("%M").orange + Rainbow(":").red +
+        Rainbow("%S").orange
       else
         datencstr
       end
@@ -72,9 +90,9 @@ module RG
       dateout = date.strftime datestr
       datencout = date.strftime datencstr
       out = if color
-        Rainbow("[").red.underline + 
+        Rainbow("[").red + 
         dateout + 
-        Rainbow("]").red.underline + Rainbow("WARN> ").orange.underline + 
+        Rainbow("]").red + Rainbow("WARN> ").orange + 
         msg
       else
         "[" + datencout + "]WARN>" + " " + msg
@@ -93,13 +111,13 @@ module RG
 
       datencstr = "%d.%m.%Y|%H:%M:%S"
       datestr = if color
-        Rainbow("%d").red.underline + Rainbow(".").orange.underline +
-        Rainbow("%m").red.underline + Rainbow(".").orange.underline +
-        Rainbow("%Y").red.underline + 
-        Rainbow("|").orange.underline +
-        Rainbow("%H").red.underline + Rainbow(":").orange.underline +
-        Rainbow("%M").red.underline + Rainbow(":").orange.underline +
-        Rainbow("%S").red.underline
+        Rainbow("%d").red + Rainbow(".").orange +
+        Rainbow("%m").red + Rainbow(".").orange +
+        Rainbow("%Y").red + 
+        Rainbow("|").orange +
+        Rainbow("%H").red + Rainbow(":").orange +
+        Rainbow("%M").red + Rainbow(":").orange +
+        Rainbow("%S").red
       else
         datencstr
       end
@@ -108,9 +126,9 @@ module RG
       dateout = date.strftime datestr
       datencout = date.strftime datencstr
       out = if color
-        Rainbow("[").orange.underline + 
+        Rainbow("[").orange + 
         dateout + 
-        Rainbow("]").orange.underline + Rainbow("ERR> ").red.underline + 
+        Rainbow("]").orange + Rainbow("ERR> ").red + 
         msg
       else
         "[" + datencout + "]ERR> " + msg
@@ -129,13 +147,13 @@ module RG
 
       datencstr = "%d.%m.%Y|%H:%M:%S"
       datestr = if color
-        Rainbow("%d").magenta.underline + Rainbow(".").red.underline +
-        Rainbow("%m").magenta.underline + Rainbow(".").red.underline +
-        Rainbow("%Y").magenta.underline + 
-        Rainbow("|").red.underline +
-        Rainbow("%H").magenta.underline + Rainbow(":").red.underline +
-        Rainbow("%M").magenta.underline + Rainbow(":").red.underline +
-        Rainbow("%S").magenta.underline
+        Rainbow("%d").magenta + Rainbow(".").red +
+        Rainbow("%m").magenta + Rainbow(".").red +
+        Rainbow("%Y").magenta + 
+        Rainbow("|").red +
+        Rainbow("%H").magenta + Rainbow(":").red +
+        Rainbow("%M").magenta + Rainbow(":").red +
+        Rainbow("%S").magenta
       else
         datencstr
       end
@@ -144,9 +162,9 @@ module RG
       dateout = date.strftime datestr
       datencout = date.strftime datencstr
       out = if color
-        Rainbow("[").red.underline + 
+        Rainbow("[").red + 
         dateout + 
-        Rainbow("]").red.underline + Rainbow("CRASH> ").magenta.underline + 
+        Rainbow("]").red + Rainbow("CRASH> ").magenta + 
         msg
       else
         "[" + datencout + "]CRASH>" + " " + msg

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nickolay02@inbox.ru"]
 
   spec.summary       = %q{NYI. In future this would include some functions i am writing in each ruby program.}
-  spec.description   = %q{Currently added: simple logs. Gonna make it write logfiles.}
+  spec.description   = %q{Currently added: simple logs, proxies.}
   spec.homepage      = "https://127.0.0.1"
   spec.license       = "MIT"
 

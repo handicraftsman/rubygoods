@@ -1,5 +1,6 @@
 require "rubygoods/version"
 require "rubygoods/log"
 require "rubygoods/string"
+require "rubygoods/proc"
 require "rubygoods/utils"
 require "rubygoods/proxy"

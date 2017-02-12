@@ -8,6 +8,6 @@ class Proc
     arr.each_index do |i|
       arr[i] = args[i]
     end
-    self.call *arr
+    self.call(*arr)
   end
 end

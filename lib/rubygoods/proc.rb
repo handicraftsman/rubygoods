@@ -1,7 +1,4 @@
 class Proc
-  def moo
-    2
-  end
   def a_call(*args)
     pl = self.arity
     arr = Array.new(pl, nil)
